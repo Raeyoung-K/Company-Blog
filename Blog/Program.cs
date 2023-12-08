@@ -40,6 +40,8 @@ builder.Services.AddScoped<IImageRepository, ImageRepository>();
 
 builder.Services.AddScoped<IPostLikeRepository, PostLikeRepository>();
 
+builder.Services.AddScoped<IPostCommentRepository, PostCommentRepository>();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

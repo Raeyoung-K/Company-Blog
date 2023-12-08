@@ -30,5 +30,8 @@ namespace Blog.Models.ViewModels
 
         public bool Liked { get; set; }
 
+		public string CommentDescription { get; set; }
+
+		public IEnumerable<PostCommentViewModel> Comments { get; set; }
     }
 }

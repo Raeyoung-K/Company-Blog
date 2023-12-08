@@ -27,5 +27,7 @@
 
         public ICollection<PostLike> Likes { get; set; }
 
+        public ICollection<PostComment> Comments { get; set; }
+
     }
 }
