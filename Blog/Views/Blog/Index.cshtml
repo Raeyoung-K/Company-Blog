@@ -1,4 +1,7 @@
-﻿@model Blog.Models.Domain.BlogPost
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> signInManager
+@inject UserManager<IdentityUser> userManager
+@model Blog.Models.ViewModels.PostDetailViewModel
 @{
 	ViewData["Title"] = Model.PageTitle;
 }
@@ -16,6 +19,22 @@
 					<span class="text-secondary">@Model.Author</span>
 					<span class="text-secondary">@Model.PublisehdDate.ToShortDateString()</span>
 				</div>
+
+				<div class="mb-3">
+					@if (signInManager.IsSignedIn(User))
+					{
+						if (Model.Liked)
+						{
+							<a style="cursor: pointer;"><i class="bi bi-heart-fill"></i></a>
+						}
+						else
+						{
+							<a id="likeBtn" style="cursor: pointer;"><i class="bi bi-heart"></i></a>
+						}
+					}
+					<span id="totalLikes">@Model.TotalLikes</span> LIKES
+				</div>
+
 					<div class="mb-3 d-flex">
 						@foreach (var tag in Model.Tags)
 						{
@@ -38,3 +57,43 @@
 		</div>
 	</div>
 </div>
+
+
+@section Scripts {
+	<script>
+
+		const likeButton = document.getElementById('likeBtn');
+		const totalLikeElement = document.getElementById('totalLikes');
+
+		async function getTotalLikes() {
+			fetch('/api/PostLike/@Model.Id/totalLikes', {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': "*/*"
+				},
+
+			})
+				.then(data => data.json())
+				.then(result => totalLikeElement.innerHTML = result);
+		}
+
+		async function addLikePost() {
+			fetch('/api/PostLike/Add', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': '*/*'
+				},
+				body: JSON.stringify({ postId: '@Model.Id', userId: '@userManager.GetUserId(User)' })
+			})
+				.then(() => {
+					likeButton.innerHTML = '<i class="bi bi-heart-fill"> </i>';
+					likeButton.removeEventListener('click', addLikePost);
+					getTotalLikes();
+				});
+		}
+
+		likeButton.addEventListener('click', addLikePost);
+	</script>
+}
