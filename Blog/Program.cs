@@ -42,6 +42,8 @@ builder.Services.AddScoped<IPostLikeRepository, PostLikeRepository>();
 
 builder.Services.AddScoped<IPostCommentRepository, PostCommentRepository>();
 
+builder.Services.AddScoped<IUserRepository,  UserRepository>();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
