@@ -16,7 +16,7 @@ namespace Blog.Repositories
         public async Task<BlogPost> AddAsync(BlogPost blogPost)
         {
             await blogDbContext.AddAsync(blogPost);
-            blogDbContext.SaveChanges();
+            await blogDbContext.SaveChangesAsync();
             return blogPost;
         }
 
